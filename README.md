@@ -1,6 +1,6 @@
 # Manager-FrontEnd
 
-## 项目启动 
+## 项目启动
 
 ```sh
 
@@ -8,7 +8,9 @@ pnpm install
 ```
 
 ### 开发模式热加载启动
+
 package.json dev 选项设置--open(pnpm run dev后自动打开浏览器)
+
 ```sh
   "scripts": {
     "dev": "vite --open",
@@ -32,7 +34,9 @@ pnpm run lint
 ```
 
 ## eslint配置
+
 package.json文件
+
 ```sh
   "scripts": {
     "lint":"eslint src",
@@ -108,12 +112,16 @@ module.exports = {
   },
 };
 ```
+
 项目更目录创建.eslintignore配置文件
+
 ```sh
 dist
 node_modules
 ```
+
 项目更目录创建.prettierignore配置文件
+
 ```sh
 /dist/*
 /html/*
@@ -220,7 +228,9 @@ module.exports = {
 /html/*
 /public/*
 ```
+
 package.json文件加入下面命令
+
 ```sh
   "scripts": {
     "fmt":"prettier --write \"./**/*.{html,vue,ts,js,json,md}\"",
@@ -230,9 +240,11 @@ package.json文件加入下面命令
 ```
 
 ### husky配置
+
 ```sh
 先创建git仓库提交后执行下面命令
 ```
+
 ```sh
 pnpm install husky
 
@@ -240,11 +252,13 @@ npx husky-init
 ```
 
 ### commiLint配置
+
 ```sh
 pnpm add @commitlint/config-conventional @commitlint/cli -D
 ```
 
 ## 项目更目录创建commitlint.config.cjs配置文件
+
 ```sh
 module.exports = {
   ignores: [(commit) => commit.includes('init')],
@@ -259,15 +273,19 @@ module.exports = {
   },
 }
 ```
+
 package.json文件加入如下命令
+
 ```sh
   "scripts": {
     "commitlint": "commitlint --config commitlint.config.cjs -e -V",
   },
 ```
+
 配置husky
 
 .husky文件夹新建commit-msg文件内容如下
+
 ```sh
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
@@ -276,7 +294,9 @@ pnpm commitlint
 ```
 
 ### 限制使用的包管理工具
+
 根目录新建scripts文件夹->新建preinstall.js文件内容如下
+
 ```sh
 if (!/pnpm/.test(process.env.npm_execpath || '')) {
   console.warn(
@@ -286,16 +306,21 @@ if (!/pnpm/.test(process.env.npm_execpath || '')) {
   process.exit(1)
 }
 ```
+
 packge.json文件增加如下命令
+
 ```sh
 "preinstall": "node ./scripts/preinstall.js",
 ```
 
 ### 安装element-plus
+
 ```shs
 pnpm install element-plus @element-plus/icons-vue
 ```
+
 入口文件main.ts全局安装element-plus,默认支持语音英语设置为中文
+
 ```sh
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'
@@ -305,11 +330,15 @@ app.use(ElementPlus,{
   locale:zhCn
 })
 ```
+
 ### SVG图标配置
+
 ```sh
 pnpm install vite-plugin-svg-icons -D
 ```
+
 在vite.config.ts中配置插件
+
 ```sh
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'

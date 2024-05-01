@@ -4,12 +4,8 @@
 
 <template>
   <div>
-    <router-view></router-view>
+    <h1>首页</h1>
   </div>
 </template>
 
-<style scoped lang="scss">
-h1 {
-  color: $color;
-}
-</style>
+<style scoped lang="scss"></style>

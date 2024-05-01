@@ -48,7 +48,7 @@ pnpm install eslint -D
 npx eslint --init
 ```
 
-### .eslintrc.cjs配置文件
+项目更目录创建.eslintrc.cjs配置文件
 
 ```sh
 module.exports = {
@@ -108,12 +108,12 @@ module.exports = {
   },
 };
 ```
-### .eslintignore配置文件
+项目更目录创建.eslintignore配置文件
 ```sh
 dist
 node_modules
 ```
-### .prettierignore配置文件
+项目更目录创建.prettierignore配置文件
 ```sh
 /dist/*
 /html/*
@@ -130,13 +130,13 @@ node_modules
 pnpm install -D eslint-plugin-import eslint-plugin-vue eslint-plugin-node eslint-plugin-prettier eslint-config-prettier eslint-plugin-node @babel/eslint-parser
 ```
 
-### 配置prettier
+配置prettier
 
 ```sh
 pnpm install eslint-plugin-prettier prettier eslint-config-prettier -D
 ```
 
-## .prettierrc.json配置文件
+项目更目录创建.prettierrc.json配置文件
 
 ```sh
 {
@@ -156,7 +156,7 @@ pnpm install eslint-plugin-prettier prettier eslint-config-prettier -D
 pnpm add sass sass-loader stylelint postcss postcss-scss postcss-html stylelint-config-prettier stylelint-config-recess-order stylelint-config-recommended-scss stylelint-config-standard stylelint-config-standard-vue stylelint-scss stylelint-order stylelint-config-standard-scss  -D
 ```
 
-### .stylelintrc.cjs配置文件
+项目更目录创建.stylelintrc.cjs配置文件
 
 ```sh
 module.exports = {
@@ -212,7 +212,7 @@ module.exports = {
 }
 ```
 
-### .stylelintignore配置文件
+项目更目录创建.stylelintignore配置文件
 
 ```sh
 /node_modules/*
@@ -220,10 +220,107 @@ module.exports = {
 /html/*
 /public/*
 ```
+package.json文件加入下面命令
+```sh
+  "scripts": {
+    "fmt":"prettier --write \"./**/*.{html,vue,ts,js,json,md}\"",
+    "lint:eslint": "eslint src/**/*.{ts,vue} --cache --fix",
+    "lint:style": "stylelint src/**/*.{css,scss,vue} --cache --fix"
+  },
+```
 
 ### husky配置
+```sh
+先创建git仓库提交后执行下面命令
+```
 ```sh
 pnpm install husky
 
 npx husky-init
+```
+
+### commiLint配置
+```sh
+pnpm add @commitlint/config-conventional @commitlint/cli -D
+```
+
+## 项目更目录创建commitlint.config.cjs配置文件
+```sh
+module.exports = {
+  ignores: [(commit) => commit.includes('init')],
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'body-leading-blank': [2, 'always'],
+    'footer-leading-blank': [1, 'always'],
+    'header-max-length': [2, 'always', 108],
+    'subject-empty': [2, 'never'],
+    'type-empty': [2, 'never'],
+    'subject-case': [0],
+  },
+}
+```
+package.json文件加入如下命令
+```sh
+  "scripts": {
+    "commitlint": "commitlint --config commitlint.config.cjs -e -V",
+  },
+```
+配置husky
+
+.husky文件夹新建commit-msg文件内容如下
+```sh
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm commitlint
+```
+
+### 限制使用的包管理工具
+根目录新建scripts文件夹->新建preinstall.js文件内容如下
+```sh
+if (!/pnpm/.test(process.env.npm_execpath || '')) {
+  console.warn(
+    `\u001b[33mThis repository must using pnpm as the package manager ` +
+      ` for scripts to work properly.\u001b[39m\n`,
+  )
+  process.exit(1)
+}
+```
+packge.json文件增加如下命令
+```sh
+"preinstall": "node ./scripts/preinstall.js",
+```
+
+### 安装element-plus
+```shs
+pnpm install element-plus @element-plus/icons-vue
+```
+入口文件main.ts全局安装element-plus,默认支持语音英语设置为中文
+```sh
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css'
+//@ts-ignore忽略当前文件ts类型的检测否则有红色提示(打包会失败)
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+app.use(ElementPlus,{
+  locale:zhCn
+})
+```
+### SVG图标配置
+```sh
+pnpm install vite-plugin-svg-icons -D
+```
+在vite.config.ts中配置插件
+```sh
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from 'path'
+export default ()=>{
+  return {
+    plugins:[
+      createSvgIconsPlugin({
+        iconDirs:[path.resolve(process.cwd(),'src/assets/icons')],
+        symbolId:'icon-[dir]-[name]'
+      }),
+    ]
+  }
+}
 ```
